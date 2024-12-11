@@ -1,8 +1,10 @@
+import { getTodos } from "@/actions/todos";
 import Navbar from "./components/NavBar";
 import { Plus } from "lucide-react";
 
 
 export default function Home() {
+  const todos = getTodos(new Date())
   return (
     <main>
       <Navbar/>
