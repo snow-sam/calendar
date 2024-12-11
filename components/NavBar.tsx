@@ -1,22 +1,19 @@
 'use client'
 
-import { eachDayOfInterval, endOfWeek, format, setDefaultOptions, startOfWeek } from "date-fns";
-import { enUS } from 'date-fns/locale';
-import { useQueryState } from "nuqs";
-import { parseAsIsoDate } from "nuqs/server";
+import { format} from "date-fns";
 import { Suspense } from "react";
 
 const FMT_TITLE_DATE = 'LLLL, d'
 
-const Navbar = () => {
-    const [date, setDate] = useQueryState("date", parseAsIsoDate.withDefault(new Date()))
-    const days = eachDayOfInterval({
-        start: startOfWeek(date),
-        end: endOfWeek(date)
-    })
+type NavBarProps = {
+    date: Date,
+    days: Date[],
+    setDate: (value: Date | ((old: Date) => Date | null) | null) => Promise<URLSearchParams>
+    handlePreviousWeek: () => Promise<URLSearchParams>,
+    handleNextWeek: () => Promise<URLSearchParams>
+}
 
-    setDefaultOptions({ locale: enUS })
-    
+const Navbar = ({date, days, setDate, handlePreviousWeek, handleNextWeek}: NavBarProps) => {
     return (
         <Suspense>
             <nav className="p-4 flex flex-col gap-2">
