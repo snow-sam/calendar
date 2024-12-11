@@ -1,43 +1,46 @@
 "use client"
 
-import { getTodos } from "@/actions/todos";
-import Navbar from "@/components/NavBar";
+import { Navbar } from "@/components/Navbar"
 import TodosSection from "@/components/TodosSection";
 import { Plus } from "lucide-react";
-import { useEffect, useState } from "react";
-import { TodoType } from "./types";
-import { eachDayOfInterval, endOfWeek, setDefaultOptions, startOfWeek, addDays, subDays } from "date-fns";
-import { useQueryState, parseAsIsoDate } from "nuqs";
-import { enUS } from 'date-fns/locale';
 
+import { format, formatISO, eachDayOfInterval, endOfWeek, setDefaultOptions, startOfWeek } from "date-fns";
+import { enUS } from 'date-fns/locale';
+import { useTodos } from "@/hooks/useTodos";
+
+const FMT_TITLE_DATE = 'LLLL, d'
 
 export default function Home() {
-  const [todos, setTodos] = useState<TodoType[]>([])
-  const [date, setDate] = useQueryState("date", parseAsIsoDate.withDefault(new Date()))
-
-  setDefaultOptions({ locale: enUS })
-
-  useEffect(() => {
-    function fetchTodos() {
-      const todos = getTodos(date)
-      setTodos(todos)
-    }
-    fetchTodos()
-  }, [])
+  const { todos, ...dateNav } = useTodos()
+  const { date, setDate, handlePreviousWeek, handleNextWeek } = dateNav
 
   const days = eachDayOfInterval({
     start: startOfWeek(date),
     end: endOfWeek(date)
   })
 
-  const handlePreviousWeek = () => setDate(subDays(date, 7))
+  const hasTodos = (date: Date): boolean => {
+    const key = format(date, "yyyy-MM-dd")
+    if (!todos.has(key)) return false
+    return !todos.get(key)?.every(item => item.isDone)
+  }
 
-  const handleNextWeek = () => setDate(addDays(date, 7))
+  setDefaultOptions({ locale: enUS })
 
   return (
     <main className="selection:text-neutral-100 selection:bg-neutral-800">
-      <Navbar date={date} days={days} setDate={setDate} handlePreviousWeek={handlePreviousWeek} handleNextWeek={handleNextWeek}/>
-      <TodosSection todos={todos} />
+      <Navbar.Root>
+        <Navbar.Title onClick={() => setDate(new Date())}>{format(date, FMT_TITLE_DATE)}</Navbar.Title>
+        <Navbar.Options>
+          {days.map((day, key) => (
+            <Navbar.Option className="relative" onClick={() => setDate(day)} key={key}>
+              {format(day, "E")}<br />{format(day, "d")}
+              {hasTodos(day) && <span className="absolute top-0 rigth-0 translate-x-2 h-1.5 w-1.5 rounded-full bg-cyan-500"/>}
+            </Navbar.Option>
+          ))}
+        </Navbar.Options>
+      </Navbar.Root>
+      <TodosSection todos={todos.get(format(date, "yyyy-MM-dd")) || []} />
       <button className="absolute right-8 bottom-8"><Plus /></button>
     </main>
   );
