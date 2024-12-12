@@ -14,7 +14,7 @@ import { Badge } from "@/components/ui/badge"
 import { badges, cn } from "@/lib/utils";
 
 
-const TodosSection = ({ todos }: TodosSectionProps) => {
+export const TodosSection = ({ todos }: TodosSectionProps) => {
     return (
         <Accordion type="multiple" className="w-full max-w-[700px] mx-auto">
             {todos.map(todo => {
@@ -40,5 +40,3 @@ const TodosSection = ({ todos }: TodosSectionProps) => {
         </Accordion>
     )
 }
-
-export default TodosSection;

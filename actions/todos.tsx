@@ -8,7 +8,7 @@ const todos: TodoType[] = [
     { id: 3, title: "Questionar o projeto", date: new Date('2024-12-12T05:00:00'), isDone: true, dueDate: "09:00" },
 ]
 
-export const getTodos = (day: Date): Map<string, TodoType[]> => {
+export const getTodos = (): Map<string, TodoType[]> => {
     const mapTodos = new Map<string, TodoType[]>()
     todos.forEach((todo) => {
         const key = format(todo.date, "yyyy-MM-dd")

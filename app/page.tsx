@@ -1,9 +1,11 @@
 "use client"
 
 import { Navbar } from "@/components/Navbar"
-import TodosSection from "@/components/TodosSection";
+import { TodosSection } from "@/components/TodosSection";
+import { FormSheet } from "@/components/FormSheet";
+
 import { Button } from "@/components/ui/button"
-import { Plus, ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { isSameDay, format, eachDayOfInterval, endOfWeek, setDefaultOptions, startOfWeek } from "date-fns";
 import { enUS } from 'date-fns/locale';
@@ -34,8 +36,8 @@ export default function Home() {
         <div className="flex justify-between items-center">
           <Navbar.Title onClick={() => setDate(new Date())}>{format(date, FMT_TITLE_DATE)}</Navbar.Title>
           <Navbar.ActionsButton>
-              <Button className="size-8" onClick={handlePreviousWeek} variant="outline" size="icon"><ChevronLeft /></Button>
-              <Button className="size-8" onClick={handleNextWeek} variant="outline" size="icon"><ChevronRight /></Button>
+            <Button className="size-8" onClick={handlePreviousWeek} variant="outline" size="icon"><ChevronLeft /></Button>
+            <Button className="size-8" onClick={handleNextWeek} variant="outline" size="icon"><ChevronRight /></Button>
           </Navbar.ActionsButton>
         </div>
         <Navbar.Options>
@@ -48,7 +50,7 @@ export default function Home() {
         </Navbar.Options>
       </Navbar.Root>
       <TodosSection todos={todos.get(format(date, "yyyy-MM-dd")) || []} />
-      <button className="absolute right-8 bottom-8"><Plus /></button>
+      <FormSheet/>
     </main>
   );
 }
