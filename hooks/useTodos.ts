@@ -10,7 +10,7 @@ export const useTodos = () => {
   
     useEffect(() => {
       function fetchTodos() {
-        const todos = getTodos(date)
+        const todos = getTodos()
         setTodos(todos)
       }
       fetchTodos()

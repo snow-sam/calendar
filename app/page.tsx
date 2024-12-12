@@ -3,15 +3,16 @@
 import { Navbar } from "@/components/Navbar"
 import { TodosSection } from "@/components/TodosSection";
 import { FormSheet } from "@/components/FormSheet";
-
 import { Button } from "@/components/ui/button"
-import { ChevronLeft, ChevronRight } from "lucide-react";
 
 import { isSameDay, format, eachDayOfInterval, endOfWeek, setDefaultOptions, startOfWeek } from "date-fns";
 import { enUS } from 'date-fns/locale';
-import { useTodos } from "@/hooks/useTodos";
 
-const FMT_TITLE_DATE = 'LLLL, d'
+import { useTodos } from "@/hooks/useTodos";
+import { FMT_TITLE_DATE } from "@/app/constants"
+
+import { ChevronLeft, ChevronRight } from "lucide-react";
+
 
 export default function Home() {
   const { todos, ...dateNav } = useTodos()
