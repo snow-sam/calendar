@@ -5,5 +5,5 @@ interface ActionsButtonProps {
 }
 
 export const ActionsButton = ({ children }: ActionsButtonProps) => {
-  return <div className="">{children}</div>;
+  return <div className="flex gap-4">{children}</div>;
 }

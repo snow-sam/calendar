@@ -5,5 +5,5 @@ interface RootProps {
 }
 
 export const Root = ({ children }: RootProps) => {
-  return <nav className="p-4 flex flex-col gap-2">{children}</nav>;
+  return <nav className="p-4 flex flex-col gap-4">{children}</nav>;
 }
