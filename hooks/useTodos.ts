@@ -1,8 +1,8 @@
-import { TodoType } from "@/app/types";
-import { getTodos } from "@/actions/todos";
+import { getTasks } from "@/actions/todos";
 import { useQueryState, createParser } from "nuqs";
-import { addDays, subDays, format, parse, isSameDay } from "date-fns";
+import { addDays, subDays, format, parse, isSameDay, endOfWeek, startOfWeek } from "date-fns";
 import { useEffect, useState } from "react";
+import { Task } from "@prisma/client";
 
 
 const dateParser = createParser({
@@ -12,13 +12,13 @@ const dateParser = createParser({
 })
 
 export const useTodos = () => {
-    const [todos, setTodos] = useState<Map<string, TodoType[]>>(new Map())
+    const [tasks, setTasks] = useState<Map<string, Task[]>>()
     const [date, setDate] = useQueryState("date", dateParser.withDefault(new Date()))
   
     useEffect(() => {
-      const fetchTodos = () => {
-        const todos = getTodos()
-        setTodos(todos)
+      const fetchTodos = async () => {
+        const tasks = await getTasks(startOfWeek(date), endOfWeek(date))
+        setTasks(tasks)
       }
       fetchTodos()
     }, [])
@@ -28,7 +28,7 @@ export const useTodos = () => {
     const handleNextWeek = () => setDate(addDays(date, 7))
 
     return {
-        todos,
+        tasks,
         date,
         setDate,
         handlePreviousWeek,

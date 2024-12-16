@@ -1,4 +1,5 @@
 "use client"
+import useSwr from 'swr'
 
 import { Navbar } from "@/components/Navbar"
 import { TodosSection } from "@/components/TodosSection";
@@ -15,7 +16,7 @@ import { ChevronLeft, ChevronRight } from "lucide-react";
 
 
 export default function Home() {
-  const { todos, ...dateNav } = useTodos()
+  const { tasks, ...dateNav } = useTodos()
   const { date, setDate, handlePreviousWeek, handleNextWeek } = dateNav
 
   const days = eachDayOfInterval({
@@ -25,8 +26,8 @@ export default function Home() {
 
   const hasTodos = (date: Date): boolean => {
     const key = format(date, "yyyy-MM-dd")
-    if (!todos.has(key)) return false
-    return !todos.get(key)?.every(item => item.isDone)
+    if (!tasks?.has(key)) return false
+    return !tasks.get(key)?.every(item => item.done)
   }
 
   setDefaultOptions({ locale: enUS })
@@ -50,7 +51,7 @@ export default function Home() {
           ))}
         </Navbar.Options>
       </Navbar.Root>
-      <TodosSection todos={todos.get(format(date, "yyyy-MM-dd")) || []} />
+      <TodosSection todos={tasks?.get(format(date, "yyyy-MM-dd")) || []} />
       <FormSheet/>
     </main>
   );

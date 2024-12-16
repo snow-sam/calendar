@@ -1,3 +1,5 @@
+import { Prisma } from "@prisma/client"
+
 export type TodoType = {
     id: number,
     date: Date,
@@ -9,3 +11,6 @@ export type TodoType = {
 }
 
 export type Badge = { role: string, }
+
+
+export type GroupByTasks = (Prisma.PickEnumerable<Prisma.TaskGroupByOutputType, "date"[]> & {})[]
