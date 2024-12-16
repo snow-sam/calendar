@@ -43,9 +43,9 @@ export default function Home() {
         </div>
         <Navbar.Options>
           {days.map((day, key) => (
-            <Navbar.Option className={`relative ${isSameDay(day, date) ? 'font-bold' : ''}`} onClick={() => setDate(day)} key={key}>
+            <Navbar.Option className={`relative ${isSameDay(day, date) ? 'font-bold' : 'opacity-30'}`} onClick={() => setDate(day)} key={key}>
               {format(day, "E")}<br />{format(day, "d")}
-              {hasTodos(day) && <span className="absolute top-0 rigth-0 translate-x-2 h-1.5 w-1.5 rounded-full bg-cyan-500" />}
+              {hasTodos(day) && <span className="absolute top-0 rigth-0 translate-x-2 h-1.5 w-1.5 rounded-full bg-orange-500" />}
             </Navbar.Option>
           ))}
         </Navbar.Options>

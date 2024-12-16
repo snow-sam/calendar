@@ -34,6 +34,7 @@ body {
     --chart-5: 27 87% 67%;
     --radius: 0.5rem;
   }
+
   .dark {
     --background: 240 10% 3.9%;
     --foreground: 0 0% 98%;
@@ -66,7 +67,126 @@ body {
   * {
     @apply border-border;
   }
+
   body {
     @apply bg-background text-foreground;
   }
 }
+
+.tiptap {
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply leading-tight mt-2.5 text-pretty
+  }
+
+  h1, h2 {
+    @apply mt-3.5 mb-1.5;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply text-base;
+  }
+
+  hr {
+    @apply border-t bg-muted cursor-pointer my-2;
+
+    &.ProseMirror-selectednode {
+      @apply bg-purple-700;
+    }
+  }
+
+  blockquote {
+    @apply mx-1.5 border-l-2 border-muted pl-3;
+  }
+
+  ul {
+    @apply list-disc;
+  }
+
+  ol {
+    @apply list-decimal;
+  }
+
+  ul, 
+  ol {
+    @apply px-1 my-1.5 mr-1 ml-3;
+    
+    li p {
+      @apply my-0.5;
+    }
+  }
+
+  ul[data-type="taskList"] {
+    @apply list-none ml-0 p-0;
+
+    li {
+      @apply flex items-end;
+
+      > label {
+        @apply flex-[0_0_auto] mr-2 select-none;
+      }
+
+      > div {
+        @apply flex-auto;
+      }
+    }
+
+    input[type="checkbox"] {
+      @apply cursor-pointer;
+    }
+
+    ul[data-type="taskList"] {
+      @apply m-0;
+    }
+  }
+}
+
+h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply leading-tight mt-2.5 text-pretty font-bold
+  }
+
+  h1, h2 {
+    @apply mt-3.5 mb-1.5;
+  }
+
+  h1 {
+    @apply text-2xl;
+  }
+
+  h2 {
+    @apply text-xl;
+  }
+
+  h3 {
+    @apply text-lg;
+  }
+
+  h4,
+  h5,
+  h6 {
+    @apply text-base;
+  }
