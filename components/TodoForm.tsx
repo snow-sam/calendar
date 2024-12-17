@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils"
 import { useState } from "react"
 import { Frequency, Task } from "@prisma/client"
 import { useBadges } from "@/hooks/useBadges"
-import { setTask } from "@/actions/todos"
+import { setTask } from "@/actions/tasks"
 
 const todoSchema = z.object({
     title: z.string().min(1),
