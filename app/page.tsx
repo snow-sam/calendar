@@ -6,6 +6,7 @@ import { FormSheet } from "@/components/FormSheet";
 import { Button } from "@/components/ui/button"
 
 import { isSameDay, format, eachDayOfInterval, startOfWeek, endOfWeek, setDefaultOptions } from "date-fns";
+import { enUS } from 'date-fns/locale'
 
 import { useDateNav } from "@/hooks/useDateNav";
 import { FMT_TITLE_DATE } from "@/app/constants"
@@ -25,6 +26,7 @@ export default function Home() {
     return false
   }
 
+  setDefaultOptions({ locale: enUS })
 
   return (
     <main className="selection:text-neutral-100 selection:bg-neutral-800">
@@ -39,8 +41,8 @@ export default function Home() {
         <Navbar.Options>
           {days.map((day, key) => (
             <Navbar.Option
-            className={`relative ${isSameDay(day, date) ? 'font-bold' : 'opacity-30'}`}
-            onClick={() => setDate(day)} key={key}>
+              className={`relative ${isSameDay(day, date) ? 'font-bold' : 'opacity-30'}`}
+              onClick={() => setDate(day)} key={key}>
               {format(day, "E")}<br />{format(day, "d")}
               {hasTodos(day) && <span className="absolute top-0 rigth-0 translate-x-2 h-1.5 w-1.5 rounded-full bg-orange-500" />}
             </Navbar.Option>
@@ -48,7 +50,7 @@ export default function Home() {
         </Navbar.Options>
       </Navbar.Root>
       <TodosSection todos={[]} />
-      <FormSheet/>
+      <FormSheet />
     </main>
   );
 }

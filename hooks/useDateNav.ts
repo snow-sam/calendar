@@ -9,7 +9,7 @@ const dateParser = createParser({
 })
 
 export const useDateNav = () => {
-    const [date, setDate] = useQueryState("date", dateParser.withDefault(new Date(2024,11,16)))
+    const [date, setDate] = useQueryState("date", dateParser.withDefault(new Date()))
     
     const handlePreviousWeek = () => setDate(subDays(date, 7))
 
