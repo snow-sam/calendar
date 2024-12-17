@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form"
 import { z } from "zod"
 
 import { Calendar } from "@/components/ui/calendar"
-import { CalendarIcon } from "lucide-react"
+import { CalendarIcon, LoaderCircle } from "lucide-react"
 import { format } from "date-fns"
 import { Button } from "@/components/ui/button"
 import { Checkbox } from "@/components/ui/checkbox"
@@ -18,6 +18,13 @@ import {
     FormMessage,
 } from "@/components/ui/form"
 import {
+    Select,
+    SelectContent,
+    SelectItem,
+    SelectTrigger,
+    SelectValue,
+} from "@/components/ui/select"
+import {
     Popover,
     PopoverContent,
     PopoverTrigger,
@@ -26,18 +33,28 @@ import { Input } from "@/components/ui/input"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
-
+import { Frequency, Task } from "@prisma/client"
+import { useBadges } from "@/hooks/useBadges"
+import { setTask } from "@/actions/tasks"
 
 const todoSchema = z.object({
     title: z.string().min(1),
-    date: z.date(),
+    date: z.date().transform((date) => new Date(date.setHours(0, 0, 0, 0))),
     description: z.string().optional(),
-    dueDate: z.string().optional()
+    time: z.string().optional(),
+    badgeId: z.string().optional(),
+    frequency: z.enum([
+        Frequency.ONCE,
+        Frequency.DAILY,
+        Frequency.WEEKLY,
+        Frequency.MONTHLY,
+        Frequency.YEARLY
+    ])
 })
 
 export const TodoForm = () => {
-
     const [useEditor, setUseEditor] = useState(true)
+    const badges = useBadges()
 
     const form = useForm<z.infer<typeof todoSchema>>({
         resolver: zodResolver(todoSchema),
@@ -45,12 +62,17 @@ export const TodoForm = () => {
             title: "",
             date: new Date(),
             description: "",
-            dueDate: ""
+            frequency: "ONCE",
+            time: ""
         },
     })
+    const { isSubmitting } = form.formState
 
-    const onSubmit = (values: z.infer<typeof todoSchema>) => {
-        alert("Todo criado com sucesso!")
+    const onSubmit = async (values: z.infer<typeof todoSchema>) => {
+        console.log(values)
+        const response = await setTask(values as Task); 
+        form.reset()
+        return response
     }
 
     return (
@@ -110,7 +132,7 @@ export const TodoForm = () => {
                     />
                     <FormField
                         control={form.control}
-                        name="dueDate"
+                        name="time"
                         render={({ field }) => (
                             <FormItem>
                                 <FormLabel className="flex flex-col">Horário</FormLabel>
@@ -122,6 +144,52 @@ export const TodoForm = () => {
                         )}
                     />
                 </div>
+                <FormField
+                    control={form.control}
+                    name="frequency"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Frequência</FormLabel>
+                            <Select onValueChange={field.onChange} defaultValue={field.value}>
+                                <FormControl>
+                                    <SelectTrigger className="bg-muted">
+                                        <SelectValue placeholder="Defina aqui a frequência" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {Object.values(Frequency).map((frequency) => (
+                                        <SelectItem key={frequency} value={frequency}>
+                                            <span className="capitalize">{frequency.toLowerCase()}</span>
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </FormItem>
+                    )}
+                />
+                <FormField
+                    control={form.control}
+                    name="badgeId"
+                    render={({ field }) => (
+                        <FormItem>
+                            <FormLabel>Etiqueta</FormLabel>
+                            <Select onValueChange={field.onChange}>
+                                <FormControl>
+                                    <SelectTrigger className="bg-muted">
+                                        <SelectValue placeholder="Alguma ocasião especial?" />
+                                    </SelectTrigger>
+                                </FormControl>
+                                <SelectContent>
+                                    {Object.values(badges).map(({ id, title }) => (
+                                        <SelectItem key={id} value={id}>
+                                            <span className="capitalize">{title.toLowerCase()}</span>
+                                        </SelectItem>
+                                    ))}
+                                </SelectContent>
+                            </Select>
+                        </FormItem>
+                    )}
+                />
                 <div className="items-center flex space-x-2">
                     <Checkbox checked={useEditor} onCheckedChange={(checked) => setUseEditor(checked as boolean)} id="editor" />
                     <div className="grid gap-0.5 leading-none">
@@ -151,8 +219,10 @@ export const TodoForm = () => {
                         )}
                     />
                 }
-                <Button className="w-full" type="submit">Adicionar</Button>
+                <Button className="w-full" type="submit" disabled={isSubmitting}>
+                    {!isSubmitting ? "Adicionar" : <LoaderCircle className="h-4 w-4 animate-spin" />}
+                </Button>
             </form>
-        </Form>
+        </Form >
     )
 }

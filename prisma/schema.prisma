@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Frequency {
+  ONCE
+  DAILY
+  WEEKLY
+  MONTHLY
+  YEARLY
+}
+
+model Task {
+  id          String   @id @default(uuid()) @db.Uuid
+  title       String   @db.Text
+  description String?  @db.Text
+  date        DateTime @default(now())
+  done        Boolean  @default(false)
+  time        String?  @db.Text
+  frequency   Frequency @default(ONCE)
+  
+  badgeId     String?   @db.Uuid   // Chave estrangeira opcional para `Badge`
+  badge       Badge?    @relation(fields: [badgeId], references: [id]) // Relação muitos-para-um com `Badge`
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Badge {
+  id    String @id @default(uuid()) @db.Uuid
+  title String
+  
+  // Relação um-para-muitos: um Badge pode ter várias Tasks
+  tasks Task[]
+}
