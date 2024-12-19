@@ -1,24 +1,17 @@
-import { useQueryState, createParser } from "nuqs";
-import { addDays, subDays, format, parse, isSameDay } from "date-fns";
-
-
-const dateParser = createParser({
-  parse: (value: string) => parse(value, 'yyyy-MM-dd', new Date()),
-  serialize: (date: Date) => format(date, 'yyyy-MM-dd'),
-  eq: (a: Date, b: Date) => isSameDay(a, b)
-})
+import { addDays, subDays } from "date-fns";
+import { useState } from "react";
 
 export const useDateNav = () => {
-    const [date, setDate] = useQueryState("date", dateParser.withDefault(new Date()))
-    
-    const handlePreviousWeek = () => setDate(subDays(date, 7))
+  const [date, setDate] = useState(new Date())
 
-    const handleNextWeek = () => setDate(addDays(date, 7))
+  const handlePreviousWeek = () => setDate(subDays(date, 7))
 
-    return {
-        date,
-        setDate,
-        handlePreviousWeek,
-        handleNextWeek
-    }
+  const handleNextWeek = () => setDate(addDays(date, 7))
+
+  return {
+    date,
+    setDate,
+    handlePreviousWeek,
+    handleNextWeek
+  }
 }

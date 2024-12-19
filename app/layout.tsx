@@ -1,4 +1,3 @@
-import { NuqsAdapter } from "nuqs/adapters/next";
 import type { Metadata } from "next";
 import { Poppins } from "next/font/google";
 
@@ -21,12 +20,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`font-mono ${poppins.className} dark antialiased`}
-      >
-        <NuqsAdapter>
-          {children}
-        </NuqsAdapter>
+      <body className={`font-mono ${poppins.className} dark antialiased`}>
+        {children}
       </body>
     </html>
   );

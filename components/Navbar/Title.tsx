@@ -5,7 +5,5 @@ interface TitleProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 }
 
 export const Title = ({ children, ...rest }: TitleProps) => {
-    return <button className="w-fit" {...rest}>
-        {children}
-    </button>;
+    return <button className="w-fit" {...rest}>{children}</button>;
 }

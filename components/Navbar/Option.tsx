@@ -6,8 +6,6 @@ interface OptionProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 
 export const Option = ({ children, ...rest }: OptionProps) => {
   return (
-    <button className="" {...rest}>
-      {children}
-    </button>
+    <button className="" {...rest}>{children}</button>
   );
 }
