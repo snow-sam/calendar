@@ -1,6 +1,7 @@
 "use client"
 
-import { QueryClientProvider, QueryClient } from "@tanstack/react-query"
+import { QueryClientProvider } from "@tanstack/react-query"
+import queryClient from "@/lib/query"
 
 import { setDefaultOptions } from "date-fns";
 import { enUS } from 'date-fns/locale'
@@ -12,8 +13,6 @@ import { Schedule } from "@/components/Schedule";
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import React from "react";
-
-const queryClient = new QueryClient()
 
 export default function Home() {
   const { date, setDate, handlePreviousWeek, handleNextWeek } = useDateNav()

@@ -28,3 +28,8 @@ export const setTask = async (data: Task) => {
     const resp = await db.task.create({ data })
     return resp
 }
+
+export const doTask = async ({id, done}: {id: string, done: boolean}) => {
+    const response = await db.task.update({data: { done }, where: { id }})
+    return response
+}
