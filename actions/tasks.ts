@@ -24,7 +24,7 @@ export const getTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
     return tasks
 }
 
-export const setTask = async (data: Task) => {
+export const createTask = async (data: Task) => {
     const resp = await db.task.create({ data })
     return resp
 }

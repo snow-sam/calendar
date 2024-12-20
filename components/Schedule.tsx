@@ -2,11 +2,14 @@
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@/lib/query';
-import { deleteTask, doTask, getTasks } from "@/actions/tasks"
+import { createTask, deleteTask, doTask, getTasks } from "@/actions/tasks"
 
 import StandartNavbar from "@/components/Navbar"
 import { TaskSection } from "@/components/TaskSection"
 import { Toast } from "@/components/Toast"
+import { DrawerDialog } from "@/components/DialogDrawer"
+import { TodoForm } from "@/components/TodoForm"
+
 
 import { startOfWeek, endOfWeek, format } from 'date-fns';
 import { FMT_KEY_DATE } from '@/app/constants';
@@ -42,7 +45,14 @@ export const Schedule = ({ date, changeDay }: ScheduleProps) => {
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
         },
-    }) 
+    })
+
+    const setTask = useMutation({
+        mutationFn: createTask,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
+        },
+    })
 
     const hasTodos = (date: Date): boolean => {
         const key = format(date, FMT_KEY_DATE)
@@ -54,6 +64,9 @@ export const Schedule = ({ date, changeDay }: ScheduleProps) => {
             <StandartNavbar date={date} changeDay={changeDay} hasTodos={hasTodos} />
             <hr />
             <TaskSection tasks={data?.get(format(date, FMT_KEY_DATE)) || []} setTaskDone={setTaskDone} setDeleteTask={setDeleteTask} />
+            <DrawerDialog>
+                <TodoForm submitFnc={setTask}/>
+            </DrawerDialog>
             {isLoading && <Toast type="loading" />}
             {error && <Toast type="error" />}
         </div>

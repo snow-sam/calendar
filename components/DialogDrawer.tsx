@@ -1,7 +1,11 @@
+"use client"
+
 import * as React from "react"
 
 import { useMediaQuery } from '@custom-react-hooks/use-media-query';
 import { Button } from "@/components/ui/button"
+import { TodoForm } from "@/components/TodoForm"
+
 import {
   Dialog,
   DialogContent,
@@ -21,7 +25,13 @@ import {
   DrawerTrigger,
 } from "@/components/ui/drawer"
 
-export function DrawerDialogDemo() {
+import { Plus } from "lucide-react";
+
+type DrawerDialogProps = {
+  children: React.ReactNode
+}
+
+export function DrawerDialog({ children }: DrawerDialogProps) {
   const [open, setOpen] = React.useState(false)
   const isDesktop = useMediaQuery("(min-width: 768px)")
 
@@ -29,15 +39,16 @@ export function DrawerDialogDemo() {
     return (
       <Dialog open={open} onOpenChange={setOpen}>
         <DialogTrigger asChild>
-          <Button variant="outline">Edit Profile</Button>
+          <Button className="fixed bottom-4 right-4" variant="outline" size="icon"><Plus /></Button>
         </DialogTrigger>
         <DialogContent className="sm:max-w-[425px]">
-          <DialogHeader>
-            <DialogTitle>Edit profile</DialogTitle>
+          <DialogHeader className="hidden">
+            <DialogTitle>New Task</DialogTitle>
             <DialogDescription>
-              Make changes to your profile here. Click save when you're done.
+              Create here your new task and go for it.
             </DialogDescription>
           </DialogHeader>
+          {children}
         </DialogContent>
       </Dialog>
     )
@@ -46,15 +57,18 @@ export function DrawerDialogDemo() {
   return (
     <Drawer open={open} onOpenChange={setOpen}>
       <DrawerTrigger asChild>
-        <Button variant="outline">Edit Profile</Button>
+        <Button className="fixed bottom-4 right-4" variant="outline" size="icon"><Plus /></Button>
       </DrawerTrigger>
       <DrawerContent>
-        <DrawerHeader className="text-left">
-          <DrawerTitle>Edit profile</DrawerTitle>
+        <DrawerHeader className="text-left hidden">
+          <DrawerTitle>New Task</DrawerTitle>
           <DrawerDescription>
-            Make changes to your profile here. Click save when you're done.
+            Create here your new task and go for it.
           </DrawerDescription>
         </DrawerHeader>
+        <div className="px-4">
+          {children}
+        </div>
         <DrawerFooter className="pt-2">
           <DrawerClose asChild>
             <Button variant="outline">Cancel</Button>

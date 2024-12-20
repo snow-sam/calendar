@@ -35,7 +35,7 @@ import { cn } from "@/lib/utils"
 import { useState } from "react"
 import { Frequency, Task } from "@prisma/client"
 import { useBadges } from "@/hooks/useBadges"
-import { setTask } from "@/actions/tasks"
+import { UseMutationResult } from "@tanstack/react-query"
 
 const todoSchema = z.object({
     title: z.string().min(1),
@@ -52,7 +52,11 @@ const todoSchema = z.object({
     ])
 })
 
-export const TodoForm = () => {
+type TodoFormProps = {
+    submitFnc: UseMutationResult<Task, Error, any>
+}
+
+export const TodoForm = ({ submitFnc }: TodoFormProps) => {
     const [useEditor, setUseEditor] = useState(true)
     const badges = useBadges()
 
@@ -68,16 +72,15 @@ export const TodoForm = () => {
     })
     const { isSubmitting } = form.formState
 
-    const onSubmit = async (values: z.infer<typeof todoSchema>) => {
+    const onSubmit = (values: z.infer<typeof todoSchema>) => {
         console.log(values)
-        const response = await setTask(values as Task); 
+        submitFnc.mutate(values)
         form.reset()
-        return response
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5 pt-8">
+            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
                 <FormField
                     control={form.control}
                     name="title"
