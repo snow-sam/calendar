@@ -23,7 +23,7 @@ export const TaskSection = ({ tasks, setTaskDone, setDeleteTask }: TaskSectionPr
                 const doneClass = task.done ? "line-through text-neutral-400" : ""
                 return (
                     <AccordionItem className="px-4" key={task.id} value={task.title}>
-                        <AccordionTrigger className="flex justify-between w-full">
+                        <AccordionTrigger className="hover:no-underline flex justify-between w-full text-de">
                             <span className={cn("block w-full overflow-hidden text-nowrap text-ellipsis", doneClass)}>
                                 {task.title}
                             </span>

@@ -29,7 +29,9 @@ import {
     PopoverContent,
     PopoverTrigger,
 } from "@/components/ui/popover"
+import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
+import { Switch } from "@/components/ui/switch"
 import { Textarea } from "@/components/ui/textarea"
 import { cn } from "@/lib/utils"
 import { useState } from "react"
@@ -58,7 +60,9 @@ type TodoFormProps = {
 
 export const TodoForm = ({ submitFnc }: TodoFormProps) => {
     const [useEditor, setUseEditor] = useState(true)
+    const [useAdvancedOptions, setUseAdvancedOptions] = useState(false)
     const badges = useBadges()
+    const isHidden = useAdvancedOptions ? '' : 'hidden'
 
     const form = useForm<z.infer<typeof todoSchema>>({
         resolver: zodResolver(todoSchema),
@@ -85,22 +89,20 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                     control={form.control}
                     name="title"
                     render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Título</FormLabel>
-                            <FormControl>
-                                <Input placeholder="Defina o título..." {...field} />
+                        <FormItem className="focus:outline-none focus-visible:outline-none focus-visible:ring-0">
+                            <FormControl autoFocus className="mt-4 focus-visible:outline-none focus-visible:ring-0">
+                                <Input className="border-transparent border-b-muted rounded-none pl-0 focus-visible:outline-none focus-visible:ring-0" placeholder="Defina o título..." {...field} />
                             </FormControl>
                             <FormMessage />
                         </FormItem>
                     )}
                 />
-                <div className="flex gap-5 items-center">
+                <div className="flex justify-between items-center">
                     <FormField
                         control={form.control}
                         name="date"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <FormLabel>Data da Tarefa</FormLabel>
                                 <Popover>
                                     <PopoverTrigger asChild>
                                         <FormControl>
@@ -137,8 +139,8 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                         control={form.control}
                         name="time"
                         render={({ field }) => (
-                            <FormItem>
-                                <FormLabel className="flex flex-col">Horário</FormLabel>
+                            <FormItem className="flex gap-4 items-center">
+                                <FormLabel>Horário:</FormLabel>
                                 <FormControl>
                                     <Input type="time" className="w-fit empty:bg-muted" {...field} />
                                 </FormControl>
@@ -147,11 +149,15 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                         )}
                     />
                 </div>
+                <div className="flex items-center space-x-2">
+                    <Switch id="advanced-mode" onCheckedChange={checked => setUseAdvancedOptions(checked)} />
+                    <Label htmlFor="advanced-mode">Advanced Options</Label>
+                </div>
                 <FormField
                     control={form.control}
                     name="frequency"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className={`${isHidden}`}>
                             <FormLabel>Frequência</FormLabel>
                             <Select onValueChange={field.onChange} defaultValue={field.value}>
                                 <FormControl>
@@ -174,7 +180,7 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                     control={form.control}
                     name="badgeId"
                     render={({ field }) => (
-                        <FormItem>
+                        <FormItem className={`${isHidden}`}>
                             <FormLabel>Etiqueta</FormLabel>
                             <Select onValueChange={field.onChange}>
                                 <FormControl>
@@ -193,7 +199,7 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                         </FormItem>
                     )}
                 />
-                <div className="items-center flex space-x-2">
+                <div className={`items-center flex space-x-2 ${isHidden}`}>
                     <Checkbox checked={useEditor} onCheckedChange={(checked) => setUseEditor(checked as boolean)} id="editor" />
                     <div className="grid gap-0.5 leading-none">
                         <label
@@ -209,7 +215,7 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                         control={form.control}
                         name="description"
                         render={({ field }) => (
-                            <FormItem>
+                            <FormItem className={`${isHidden}`}>
                                 <FormLabel>Descrição</FormLabel>
                                 <FormControl>
                                     <Textarea

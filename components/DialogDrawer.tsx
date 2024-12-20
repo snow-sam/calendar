@@ -55,18 +55,18 @@ export function DrawerDialog({ children }: DrawerDialogProps) {
   }
 
   return (
-    <Drawer open={open} onOpenChange={setOpen}>
+    <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
       <DrawerTrigger asChild>
         <Button className="fixed bottom-4 right-4" variant="outline" size="icon"><Plus /></Button>
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent className="h-fit">
         <DrawerHeader className="text-left hidden">
           <DrawerTitle>New Task</DrawerTitle>
           <DrawerDescription>
             Create here your new task and go for it.
           </DrawerDescription>
         </DrawerHeader>
-        <div className="px-4">
+        <div className="px-4 h-fit">
           {children}
         </div>
         <DrawerFooter className="pt-2">
