@@ -11,11 +11,12 @@ import { UseMutationResult } from "@tanstack/react-query"
 
 type TaskSectionProps = {
     tasks: Task[]
-    setTaskDone: UseMutationResult<Task, Error, {id: string, done: boolean}>
+    setTaskDone: UseMutationResult<Task, Error, { id: string, done: boolean }>
+    setDeleteTask: UseMutationResult<Task, Error, { id: string }>
 }
 
 
-export const TaskSection = ({ tasks, setTaskDone }: TaskSectionProps) => {
+export const TaskSection = ({ tasks, setTaskDone, setDeleteTask }: TaskSectionProps) => {
     return (
         <Accordion type="multiple" className="w-full max-w-[700px] mx-auto">
             {tasks.map(task => {
@@ -32,7 +33,10 @@ export const TaskSection = ({ tasks, setTaskDone }: TaskSectionProps) => {
                         </AccordionTrigger>
                         <AccordionContent className="flex flex-col w-full">
                             {task.description}
-                            <Button onClick={() => setTaskDone.mutate({id: task.id, done: !task.done})} variant="outline">Done</Button>
+                            <div className="flex flex-col space-y-2">
+                                <Button onClick={() => setTaskDone.mutate({ id: task.id, done: !task.done })} variant="outline">Done</Button>
+                                <Button onClick={() => setDeleteTask.mutate({ id: task.id })} variant="destructive">Delete</Button>
+                            </div>
                         </AccordionContent>
                     </AccordionItem>
                 )

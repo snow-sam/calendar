@@ -33,3 +33,8 @@ export const doTask = async ({id, done}: {id: string, done: boolean}) => {
     const response = await db.task.update({data: { done }, where: { id }})
     return response
 }
+
+export const deleteTask = async ({id}: {id: string}) => {
+    const response = await db.task.delete({where: {id}})
+    return response
+}

@@ -2,7 +2,7 @@
 
 import { useQuery, useMutation } from '@tanstack/react-query';
 import queryClient from '@/lib/query';
-import { doTask, getTasks } from "@/actions/tasks"
+import { deleteTask, doTask, getTasks } from "@/actions/tasks"
 
 import StandartNavbar from "@/components/Navbar"
 import { TaskSection } from "@/components/TaskSection"
@@ -33,9 +33,16 @@ export const Schedule = ({ date, changeDay }: ScheduleProps) => {
     const setTaskDone = useMutation({
         mutationFn: doTask,
         onSuccess: () => {
-          queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
+            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
         },
-      })
+    })
+
+    const setDeleteTask = useMutation({
+        mutationFn: deleteTask,
+        onSuccess: () => {
+            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
+        },
+    }) 
 
     const hasTodos = (date: Date): boolean => {
         const key = format(date, FMT_KEY_DATE)
@@ -46,9 +53,9 @@ export const Schedule = ({ date, changeDay }: ScheduleProps) => {
         <div>
             <StandartNavbar date={date} changeDay={changeDay} hasTodos={hasTodos} />
             <hr />
-            <TaskSection tasks={data?.get(format(date, FMT_KEY_DATE)) || []} setTaskDone={setTaskDone}/>
-            {isLoading && <Toast type="loading"/>}
-            {error && <Toast type="error"/>}
+            <TaskSection tasks={data?.get(format(date, FMT_KEY_DATE)) || []} setTaskDone={setTaskDone} setDeleteTask={setDeleteTask} />
+            {isLoading && <Toast type="loading" />}
+            {error && <Toast type="error" />}
         </div>
     )
 }
