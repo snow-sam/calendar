@@ -1,6 +1,7 @@
 "use server"
 
 import db from "@/lib/db"
+import { currentUser } from "@clerk/nextjs/server"
 import { Task } from "@prisma/client"
 import { format } from "date-fns"
 
@@ -9,12 +10,15 @@ type UpdateTaskParams = Partial<Task> & { id: string };
 
 export const getWeeklyTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
     const tasks = new Map()
+    const userId = (await currentUser())?.id
+    if (!userId) return tasks
     const data = await db.task.findMany({
         where: {
             date: {
                 lte: endOfTheWeek,
                 gte: startOfTheWeek,
             },
+            userId
         }
     })
     data.forEach((task) => {

@@ -34,7 +34,7 @@ export const TaskSection = ({ tasks, onTaskDone, onDeleteTask }: TaskSectionProp
                         </AccordionTrigger>
                         <AccordionContent className="flex flex-col w-full">
                             {task.description}
-                            <div className="flex flex-col space-y-2">
+                            <div className="flex flex-col space-y-2 mt-4">
                                 <Button onClick={() => onTaskDone.mutate({ id: task.id, done: !task.done })} variant="outline">Done</Button>
                                 <Button onClick={() => onDeleteTask.mutate({ id: task.id })} variant="destructive">Delete</Button>
                             </div>

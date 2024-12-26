@@ -13,10 +13,10 @@ import { Schedule } from "@/components/Schedule";
 import { ChevronLeft, ChevronRight } from "lucide-react"
 
 import React from "react";
+import { UserButton } from "@clerk/nextjs";
 
 export default function Home() {
   const { date, setDate, handlePreviousWeek, handleNextWeek } = useDateNav()
-
   setDefaultOptions({ locale: enUS })
 
   return (
@@ -28,6 +28,7 @@ export default function Home() {
         <Button className="size-8" onClick={handleNextWeek} variant="outline" size="icon">
           <ChevronRight />
         </Button>
+        <UserButton/>
       </div>
       <QueryClientProvider client={queryClient}>
         <Schedule date={date} changeDay={setDate} />

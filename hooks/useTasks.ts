@@ -1,13 +1,16 @@
 "use client"
 
+import { useUser } from '@clerk/clerk-react';
 import queryClient from '@/lib/query';
 import { useQuery, useMutation } from '@tanstack/react-query';
 import { createTask, deleteTask, updateTask, getWeeklyTasks } from "@/actions/tasks"
 import { toast } from 'react-hot-toast'
 import { useState } from 'react';
+import { Task } from '@prisma/client';
 
 export const useTasks = (start: Date, end: Date) => {
     const queryKey = ['tasks', [start, end]]
+    const { user } = useUser()
     const [toastID, setToastID] = useState("")
 
     const { data, isLoading, error } = useQuery({
@@ -50,7 +53,7 @@ export const useTasks = (start: Date, end: Date) => {
     })
 
     const createTaskRequest = useMutation({
-        mutationFn: createTask,
+        mutationFn: (data: Task) => createTask({...data, userId: user?.id || ''}),
         onSuccess: () => {
             queryClient.invalidateQueries({ queryKey })
             toast.success("Task created!")
