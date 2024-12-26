@@ -1,19 +1,24 @@
 "use server"
 
 import db from "@/lib/db"
+import { currentUser } from "@clerk/nextjs/server"
 import { Task } from "@prisma/client"
 import { format } from "date-fns"
 
+type UpdateTaskParams = Partial<Task> & { id: string };
 
 
-export const getTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
+export const getWeeklyTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
     const tasks = new Map()
+    const userId = (await currentUser())?.id
+    if (!userId) return tasks
     const data = await db.task.findMany({
         where: {
             date: {
                 lte: endOfTheWeek,
                 gte: startOfTheWeek,
             },
+            userId
         }
     })
     data.forEach((task) => {
@@ -24,7 +29,18 @@ export const getTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
     return tasks
 }
 
-export const setTask = async (data: Task) => {
+export const createTask = async (data: Task) => {
     const resp = await db.task.create({ data })
     return resp
+}
+
+export const updateTask = async (updateData: UpdateTaskParams) => {
+    const { id, ...data } = updateData
+    const response = await db.task.update({data: data, where: { id }})
+    return response
+}
+
+export const deleteTask = async ({id}: {id: string}) => {
+    const response = await db.task.delete({where: {id}})
+    return response
 }
