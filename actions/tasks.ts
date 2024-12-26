@@ -4,9 +4,10 @@ import db from "@/lib/db"
 import { Task } from "@prisma/client"
 import { format } from "date-fns"
 
+type UpdateTaskParams = Partial<Task> & { id: string };
 
 
-export const getTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
+export const getWeeklyTasks = async (startOfTheWeek: Date, endOfTheWeek: Date) => {
     const tasks = new Map()
     const data = await db.task.findMany({
         where: {
@@ -29,8 +30,9 @@ export const createTask = async (data: Task) => {
     return resp
 }
 
-export const doTask = async ({id, done}: {id: string, done: boolean}) => {
-    const response = await db.task.update({data: { done }, where: { id }})
+export const updateTask = async (updateData: UpdateTaskParams) => {
+    const { id, ...data } = updateData
+    const response = await db.task.update({data: data, where: { id }})
     return response
 }
 

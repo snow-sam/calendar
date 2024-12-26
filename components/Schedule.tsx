@@ -1,21 +1,17 @@
 "use client"
 
-import { useQuery, useMutation } from '@tanstack/react-query';
-import queryClient from '@/lib/query';
-import { createTask, deleteTask, doTask, getTasks } from "@/actions/tasks"
+import { startOfWeek, endOfWeek, format } from 'date-fns';
+import { Task } from '@prisma/client';
+import { Toaster } from 'react-hot-toast'
+import { LoaderCircle } from "lucide-react";
+
+import { FMT_KEY_DATE } from '@/app/constants';
+import { useTasks } from "@/hooks/useTasks"
 
 import StandartNavbar from "@/components/Navbar"
 import { TaskSection } from "@/components/TaskSection"
-import { Toast } from "@/components/Toast"
 import { DrawerDialog } from "@/components/DialogDrawer"
-import { TodoForm } from "@/components/TodoForm"
-
-
-import { startOfWeek, endOfWeek, format } from 'date-fns';
-import { FMT_KEY_DATE } from '@/app/constants';
-import { Task } from '@prisma/client';
-
-
+import { TaskForm } from "@/components/TaskForm"
 
 
 type ScheduleProps = {
@@ -25,34 +21,8 @@ type ScheduleProps = {
 
 export const Schedule = ({ date, changeDay }: ScheduleProps) => {
     const [start, end] = [startOfWeek(date), endOfWeek(date)]
-
-    const { data, isLoading, error } = useQuery({
-        queryKey: ['tasks', [start, end]],
-        queryFn: () => getTasks(start, end),
-        enabled: !!(start && end),
-        refetchOnWindowFocus: false,
-    })
-
-    const setTaskDone = useMutation({
-        mutationFn: doTask,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
-        },
-    })
-
-    const setDeleteTask = useMutation({
-        mutationFn: deleteTask,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
-        },
-    })
-
-    const setTask = useMutation({
-        mutationFn: createTask,
-        onSuccess: () => {
-            queryClient.invalidateQueries({ queryKey: ['tasks', [start, end]] })
-        },
-    })
+    const { data, isLoading, error, ...requestFnc } = useTasks(start, end)
+    const { createTaskRequest, updateTaskRequest, deleteTaskRequest } = requestFnc
 
     const hasTodos = (date: Date): boolean => {
         const key = format(date, FMT_KEY_DATE)
@@ -63,12 +33,15 @@ export const Schedule = ({ date, changeDay }: ScheduleProps) => {
         <div>
             <StandartNavbar date={date} changeDay={changeDay} hasTodos={hasTodos} />
             <hr />
-            <TaskSection tasks={data?.get(format(date, FMT_KEY_DATE)) || []} setTaskDone={setTaskDone} setDeleteTask={setDeleteTask} />
+            {isLoading && <div className='absolute size-6 text-neutral-600 left-1/2 bottom-1/2 -translate-x-1/2'><LoaderCircle className="animate-spin size-6 text-neutral-700"/></div>}
+            <TaskSection
+                tasks={data?.get(format(date, FMT_KEY_DATE)) || []}
+                onTaskDone={updateTaskRequest}
+                onDeleteTask={deleteTaskRequest} />
             <DrawerDialog>
-                <TodoForm submitFnc={setTask}/>
+                <TaskForm onSubmit={createTaskRequest} />
             </DrawerDialog>
-            {isLoading && <Toast type="loading" />}
-            {error && <Toast type="error" />}
+            <Toaster position='bottom-center' toastOptions={{style: {background: '#18181b', color: '#FFF'}}}/>
         </div>
     )
 }

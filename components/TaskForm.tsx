@@ -54,11 +54,11 @@ const todoSchema = z.object({
     ])
 })
 
-type TodoFormProps = {
-    submitFnc: UseMutationResult<Task, Error, any>
+type TaskFormProps = {
+    onSubmit: UseMutationResult<Task, Error, any>
 }
 
-export const TodoForm = ({ submitFnc }: TodoFormProps) => {
+export const TaskForm = ({ onSubmit }: TaskFormProps) => {
     const [useEditor, setUseEditor] = useState(true)
     const [useAdvancedOptions, setUseAdvancedOptions] = useState(false)
     const badges = useBadges()
@@ -76,15 +76,15 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
     })
     const { isSubmitting } = form.formState
 
-    const onSubmit = (values: z.infer<typeof todoSchema>) => {
+    const handleSubmit = (values: z.infer<typeof todoSchema>) => {
         console.log(values)
-        submitFnc.mutate(values)
+        onSubmit.mutate(values)
         form.reset()
     }
 
     return (
         <Form {...form}>
-            <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-5">
+            <form onSubmit={form.handleSubmit(handleSubmit)} className="space-y-5">
                 <FormField
                     control={form.control}
                     name="title"
@@ -103,7 +103,7 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                         name="date"
                         render={({ field }) => (
                             <FormItem className="flex flex-col">
-                                <Popover>
+                                <Popover modal={true}>
                                     <PopoverTrigger asChild>
                                         <FormControl>
                                             <Button
@@ -131,7 +131,6 @@ export const TodoForm = ({ submitFnc }: TodoFormProps) => {
                                         />
                                     </PopoverContent>
                                 </Popover>
-                                <FormMessage />
                             </FormItem>
                         )}
                     />
