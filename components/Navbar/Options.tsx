@@ -5,5 +5,5 @@ interface OptionsProps {
 }
 
 export const Options = ({ children }: OptionsProps) => {
-  return <div className="flex self-center justify-between w-full max-w-96 text-center text-sm">{children}</div>;
+  return <div className="flex self-center justify-between w-full max-w-96 text-center text-sm mt-4">{children}</div>;
 }

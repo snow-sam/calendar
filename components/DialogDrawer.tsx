@@ -4,7 +4,6 @@ import * as React from "react"
 
 import { useMediaQuery } from '@custom-react-hooks/use-media-query';
 import { Button } from "@/components/ui/button"
-import { TodoForm } from "@/components/TaskForm"
 
 import {
   Dialog,
@@ -57,7 +56,7 @@ export function DrawerDialog({ children }: DrawerDialogProps) {
   return (
     <Drawer open={open} onOpenChange={setOpen} repositionInputs={false}>
       <DrawerTrigger asChild>
-        <Button className="fixed bottom-4 right-4" variant="outline" size="icon"><Plus /></Button>
+        <Button className="fixed bottom-16 right-8 size-10" variant="outline" size="icon"><Plus /></Button>
       </DrawerTrigger>
       <DrawerContent className="h-fit">
         <DrawerHeader className="text-left hidden">
