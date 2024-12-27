@@ -19,7 +19,7 @@ type TaskSectionProps = {
 
 export const TaskSection = ({ tasks, onTaskDone, onDeleteTask }: TaskSectionProps) => {
     return (
-        <Accordion type="multiple" className="w-full max-w-[700px] mx-auto">
+        <Accordion type="single" collapsible className="w-full max-w-[700px] mx-auto">
             {tasks.map(task => {
                 const doneClass = task.done ? "line-through text-neutral-400" : ""
                 return (
